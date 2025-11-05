@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+  <!-- Conversión CRLF segura -->
+  <conversionRule conversionWord="crlf" converterClass="com.mycompany.myapp.config.CRLFLogConverter" />
+
+  <!-- Patrones de consola -->
+  <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd'T'HH:mm:ss.SSSXXX}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %crlf(%m){red} %n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+
+  <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+  <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+  <!-- Niveles por paquete (los tuyos) -->
+  <logger name="com.mycompany.myapp" level="INFO"/>
+  <logger name="angus.activation" level="WARN"/>
+  <logger name="jakarta.activation" level="WARN"/>
+  <logger name="jakarta.mail" level="WARN"/>
+  <logger name="jakarta.management.remote" level="WARN"/>
+  <logger name="jakarta.xml.bind" level="WARN"/>
+  <logger name="jdk.event.security" level="INFO"/>
+  <logger name="com.ryantenney" level="WARN"/>
+  <logger name="com.sun" level="WARN"/>
+  <logger name="com.zaxxer" level="WARN"/>
+  <logger name="io.undertow" level="WARN"/>
+  <logger name="io.undertow.websockets.jsr" level="ERROR"/>
+  <logger name="org.ehcache" level="WARN"/>
+  <logger name="org.apache" level="WARN"/>
+  <logger name="org.apache.catalina.startup.DigesterFactory" level="OFF"/>
+  <logger name="org.bson" level="WARN"/>
+  <logger name="org.hibernate.validator" level="WARN"/>
+  <logger name="org.hibernate" level="WARN"/>
+  <logger name="org.hibernate.ejb.HibernatePersistence" level="OFF"/>
+  <logger name="org.postgresql" level="WARN"/>
+  <logger name="org.springframework" level="WARN"/>
+  <logger name="org.springframework.web" level="WARN"/>
+  <logger name="org.springframework.security" level="WARN"/>
+  <logger name="org.springframework.boot.autoconfigure.logging" level="INFO"/>
+  <logger name="org.springframework.cache" level="WARN"/>
+  <logger name="org.thymeleaf" level="WARN"/>
+  <logger name="org.xnio" level="WARN"/>
+  <logger name="io.swagger.v3" level="INFO"/>
+  <logger name="sun.rmi" level="WARN"/>
+  <logger name="sun.rmi.transport" level="WARN"/>
+  <logger name="Validator" level="INFO"/>
+  <logger name="_org.springframework.web.servlet.HandlerMapping.Mappings" level="INFO"/>
+  <logger name="org.springframework.boot.docker" level="WARN"/>
+  <logger name="liquibase" level="WARN"/>
+  <logger name="LiquibaseSchemaResolver" level="INFO"/>
+  <!-- jhipster-needle-logback-add-log -->
+
+  <!-- === Propiedades Spring === -->
+  <springProperty name="log.level" source="logging.level.root" defaultValue="INFO" />
+  <springProperty name="LOGSTASH_ENABLED" source="jhipster.logging.logstash.enabled" defaultValue="false"/>
+  <springProperty name="LOGSTASH_HOST"    source="jhipster.logging.logstash.host"    defaultValue="localhost"/>
+  <springProperty name="LOGSTASH_PORT"    source="jhipster.logging.logstash.port"    defaultValue="5000"/>
+
+  <!-- Appender TCP a Logstash -->
+  <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+    <destination>${LOGSTASH_HOST}:${LOGSTASH_PORT}</destination>
+    <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    <keepAliveDuration>5 minutes</keepAliveDuration>
+    <reconnectionDelay>5 seconds</reconnectionDelay>
+  </appender>
+
+  <!-- ÚNICO root -->
+  <root level="${log.level}">
+    <appender-ref ref="CONSOLE" />
+    <!-- Adjuntar LOGSTASH solo si está habilitado -->
+    <!-- Nota: LoggingConfiguration.java también puede crear un appender,
+         pero este appender manual asegura que funcione correctamente -->
+    <if condition='property("LOGSTASH_ENABLED").equals("true")'>
+      <then>
+        <appender-ref ref="LOGSTASH"/>
+      </then>
+    </if>
+  </root>
+
+  <!-- Silenciar status interno de Logback -->
+  <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
+
+  <!-- Resetear JUL -->
+  <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+    <resetJUL>true</resetJUL>
+  </contextListener>
+</configuration>
