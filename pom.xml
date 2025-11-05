@@ -643,7 +643,7 @@
                             </platforms>
                         </from>
                         <to>
-                            <image>emicora/TP4-Ing-Soft:latest</image>
+                            <image>emicora/tp4-ing-soft:latest</image>
                             <tags>
                                 <tag>${project.version}</tag>
                                 <tag>latest</tag>
