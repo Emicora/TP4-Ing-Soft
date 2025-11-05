@@ -59,7 +59,7 @@ pipeline {
             echo 'Build failed!'
         }
         always {
-            junit 'target/test-results/**/*.xml'
+            junit allowEmptyResults: true, testResults: 'target/test-results/**/*.xml'
         }
     }
 }

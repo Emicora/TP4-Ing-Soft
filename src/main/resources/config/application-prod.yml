@@ -31,6 +31,9 @@ spring:
       enabled: false
     livereload:
       enabled: false
+  docker:
+    compose:
+      enabled: false
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:postgresql://localhost:5432/prueba
